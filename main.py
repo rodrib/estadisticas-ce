@@ -70,3 +70,115 @@ with card_container(key="table1"):
 
 ui_result = ui.button("Button", key="btn")
 st.write("UI Button Clicked:", ui_result)
+
+
+##
+import pandas as pd
+
+# Especifica la ruta del archivo CSV
+file_path = 'comite-etl1 - comite-etl1.csv'
+
+# Leer el archivo CSV y convertirlo en un DataFrame
+df = pd.read_csv(file_path)
+
+# Mostrar las primeras filas del DataFrame en Streamlit
+st.title('Mostrar DataFrame en Streamlit')
+st.dataframe(df.head())
+
+
+######
+# Contar los valores únicos en la columna 'Proyecto/tesis/Resumen'
+resumen_counts = df['Proyecto/tesis/Resumen'].value_counts().reset_index()
+resumen_counts.columns = ['Proyecto/tesis/Resumen', 'Cantidad']
+
+# Mostrar gráfico basado en Proyecto/tesis/Resumen
+st.subheader("Distribución de Proyecto/tesis/Resumen")
+with card_container(key="chart2"):
+    st.vega_lite_chart(resumen_counts, {
+        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(29, 250, 173)', 'cornerRadiusEnd': 4 },
+        'encoding': {
+            'x': {'field': 'Proyecto/tesis/Resumen', 'type': 'ordinal', 'axis': {'title': 'Proyecto/tesis/Resumen'}},
+            'y': {'field': 'Cantidad', 'type': 'quantitative', 'axis': {'title': 'Cantidad', 'grid': False}},
+        },
+    }, use_container_width=True)
+
+
+    # Contar los valores únicos en la columna 'Proyecto/tesis/Resumen'
+resumen_counts = df['Proyecto/tesis/Resumen'].value_counts().reset_index()
+resumen_counts.columns = ['Proyecto/tesis/Resumen', 'Cantidad']
+
+# Mostrar el conteo de valores para verificar
+st.write("Conteo de valores en 'Proyecto/tesis/Resumen':")
+st.write(resumen_counts)
+
+###########
+# Definir los datos
+data = {
+    'Proyecto/tesis/Resumen': ['Tesis', 'Proyecto', 'Tesis Maestria', 'Resumen', 'Ensayo clinico', 'Tesis Doctoral', 'Tesis Especialidad'],
+    'Cantidad': [69, 52, 14, 7, 2, 1, 1]
+}
+
+# Crear el DataFrame
+df1 = pd.DataFrame(data)
+
+# Ordenar los datos por 'Cantidad' de mayor a menor
+df1 = df1.sort_values(by='Cantidad', ascending=False)
+
+# Obtener el orden de categorías
+category_order = df1['Proyecto/tesis/Resumen'].tolist()
+
+# Mostrar el gráfico basado en Proyecto/tesis/Resumen
+st.subheader("Distribución de Proyecto/tesis/Resumen")
+with card_container(key="chart2"):
+    st.vega_lite_chart(df1, {
+        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
+        'encoding': {
+            'x': {'field': 'Proyecto/tesis/Resumen', 'type': 'ordinal', 'axis': {'title': 'Proyecto/tesis/Resumen'}, 'sort': category_order},
+            'y': {'field': 'Cantidad', 'type': 'quantitative', 'axis': {'title': 'Cantidad', 'grid': False}},
+        },
+    }, use_container_width=True)
+
+# Calcular la cantidad para cada valor único en 'Cuanti/Cuali'
+cantidad_por_categoria = df['Cuanti/Cuali'].value_counts().reset_index()
+cantidad_por_categoria.columns = ['Cuanti/Cuali', 'Cantidad']
+
+# Ordenar los datos por 'Cantidad' de mayor a menor
+cantidad_por_categoria = cantidad_por_categoria.sort_values(by='Cantidad', ascending=False)
+
+# Obtener el orden de categorías
+category_order = cantidad_por_categoria['Cuanti/Cuali'].tolist()
+
+# Mostrar el gráfico basado en Cuanti/Cuali
+st.subheader("Distribución de Cuanti/Cuali")
+with card_container(key="chart2"):
+    st.vega_lite_chart(cantidad_por_categoria, {
+        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(29, 250, 173)', 'cornerRadiusEnd': 4 },
+        'encoding': {
+            'x': {'field': 'Cuanti/Cuali', 'type': 'ordinal', 'axis': {'title': 'Cuanti/Cuali'}, 'sort': category_order},
+            'y': {'field': 'Cantidad', 'type': 'quantitative', 'axis': {'title': 'Cantidad', 'grid': False}},
+        },
+    }, use_container_width=True)
+
+
+###########
+
+# Calcular la cantidad para cada combinación única de 'Año' y 'Cuanti/Cuali'
+cantidad_por_ano_categoria = df.groupby(['Año', 'Cuanti/Cuali']).size().reset_index(name='Cantidad')
+
+# Ordenar los datos por 'Ano' y 'Cantidad'
+cantidad_por_ano_categoria = cantidad_por_ano_categoria.sort_values(by=['Año', 'Cantidad'], ascending=[True, False])
+
+# Obtener los años únicos
+anos_unicos = cantidad_por_ano_categoria['Año'].unique().tolist()
+
+# Mostrar el gráfico de barras agrupadas
+st.subheader("Distribución de Cuanti/Cuali por Año")
+with card_container(key="chart3"):
+    st.vega_lite_chart(cantidad_por_ano_categoria, {
+        "mark": "bar",
+        "encoding": {
+            "x": {"field": "Año", "type": "ordinal", "title": "Año"},
+            "y": {"field": "Cantidad", "type": "quantitative", "title": "Cantidad"},
+            "color": {"field": "Cuanti/Cuali", "type": "nominal", "title": "Cuanti/Cuali"}
+        },
+    }, use_container_width=True)
