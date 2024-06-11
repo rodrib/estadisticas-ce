@@ -76,7 +76,7 @@ st.write("UI Button Clicked:", ui_result)
 import pandas as pd
 
 # Especifica la ruta del archivo CSV
-file_path = 'comite-etl1 - comite-etl1.csv'
+file_path = 'comite-etl-all.csv'
 
 # Leer el archivo CSV y convertirlo en un DataFrame
 df = pd.read_csv(file_path)
@@ -113,11 +113,11 @@ st.write(resumen_counts)
 
 ###########
 # Definir los datos
+# Definir los datos
 data = {
-    'Proyecto/tesis/Resumen': ['Tesis', 'Proyecto', 'Tesis Maestria', 'Resumen', 'Ensayo clinico', 'Tesis Doctoral', 'Tesis Especialidad'],
-    'Cantidad': [69, 52, 14, 7, 2, 1, 1]
+    'Proyecto/tesis/Resumen': ['Tesis', 'Proyecto', 'Trabajo de Investigacion', 'Tesis Maestria', 'Resumen', 'Ensayo Clinico', 'Tesis Doctoral', 'Tesis Especialidad'],
+    'Cantidad': [174, 68, 64, 22, 7, 3, 2, 1]
 }
-
 # Crear el DataFrame
 df1 = pd.DataFrame(data)
 
@@ -172,7 +172,7 @@ cantidad_por_ano_categoria = cantidad_por_ano_categoria.sort_values(by=['Año', 
 anos_unicos = cantidad_por_ano_categoria['Año'].unique().tolist()
 
 # Mostrar el gráfico de barras agrupadas
-st.subheader("Distribución de Cuanti/Cuali por Año")
+st.subheader("Distribución de Tipo de Estudio por Año")
 with card_container(key="chart3"):
     st.vega_lite_chart(cantidad_por_ano_categoria, {
         "mark": "bar",
@@ -180,5 +180,38 @@ with card_container(key="chart3"):
             "x": {"field": "Año", "type": "ordinal", "title": "Año"},
             "y": {"field": "Cantidad", "type": "quantitative", "title": "Cantidad"},
             "color": {"field": "Cuanti/Cuali", "type": "nominal", "title": "Cuanti/Cuali"}
+        },
+    }, use_container_width=True)
+
+
+
+
+########
+import streamlit as st
+import pandas as pd
+import streamlit_shadcn_ui as ui
+from local_components import card_container
+
+# Tu DataFrame con las columnas 'Politica' y 'Año'
+# Asumiendo que tu DataFrame se llama df y tiene las columnas 'Politica' y 'Año'
+
+# Calcular la cantidad para cada combinación única de 'Año' y 'Politica'
+cantidad_por_ano_politica = df.groupby(['Año', 'Politica']).size().reset_index(name='Cantidad')
+
+# Ordenar los datos por 'Año' y 'Cantidad'
+cantidad_por_ano_politica = cantidad_por_ano_politica.sort_values(by=['Año', 'Cantidad'], ascending=[True, False])
+
+# Obtener los años únicos
+anos_unicos = cantidad_por_ano_politica['Año'].unique().tolist()
+
+# Mostrar el gráfico de barras agrupadas
+st.subheader("Temas Prioritarios")
+with card_container(key="chart5"):
+    st.vega_lite_chart(cantidad_por_ano_politica, {
+        "mark": "bar",
+        "encoding": {
+            "x": {"field": "Año", "type": "ordinal", "title": "Año"},
+            "y": {"field": "Cantidad", "type": "quantitative", "title": "Cantidad"},
+            "color": {"field": "Politica", "type": "nominal", "title": "Politica"}
         },
     }, use_container_width=True)
