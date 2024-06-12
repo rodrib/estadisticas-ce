@@ -224,7 +224,7 @@ with card_container(key="chart5"):
 
 import streamlit_shadcn_ui as ui
 
-st.header("Tabs")
+st.header("Nube de palabras segun los Proyectos")
 
 #with open("docs/components/tabs.md", "r") as f:
  #   st.markdown(f.read())
@@ -252,14 +252,15 @@ st.header("Tabs")
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-value = ui.tabs(options=['PyGWalker', 'Graphic Walker'], default_value='PyGWalker', key="kanaries")
+value = ui.tabs(options=['2019', '2024'], default_value='2019', key="kanaries")
 
 with ui.card(key="image"):
-    if value == "PyGWalker":
-        st.image("miseq-imagen.png", caption="PyGWalker", use_column_width=True)
+    if value == "2019":
+        st.image("prueba1.png", caption="PyGWalker", use_column_width=True)
         ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
-    elif value == "Graphic Walker":
-        ui.element("img", src="https://pub-8e7aa5bf51e049199c78b4bc744533f8.r2.dev/graphic-walker-banner.png", className="w-full")
+    elif value == "2024":
+        st.image("nube2024.png", caption="PyGWalker", use_column_width=True)
+        #ui.element("img", src="https://pub-8e7aa5bf51e049199c78b4bc744533f8.r2.dev/graphic-walker-banner.png", className="w-full")
         ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/graphic-walker", className="mt-2", key="btn2")
 
 # Mostrar el contenido de las pestañas
