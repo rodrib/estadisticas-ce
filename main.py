@@ -26,51 +26,6 @@ ui.tabs(options=['Overview', 'Analytics', 'Reports', 'Notifications'], default_v
 
 ui.date_picker(key="date_picker1")
 
-cols = st.columns(3)
-with cols[0]:
-    # with ui.card():
-    #     ui.element()
-    ui.card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card1").render()
-with cols[1]:
-    ui.card(title="Subscriptions", content="+2350", description="+180.1% from last month", key="card2").render()
-with cols[2]:
-    ui.card(title="Sales", content="+12,234", description="+19% from last month", key="card3").render()
-
-def generate_sales_data():
-    np.random.seed(0)  # For reproducible results
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    sales = np.random.randint(1000, 5000, size=len(months))
-    return pd.DataFrame({'Month': months, 'Sales': sales})
-
-with card_container(key="chart1"):
-    st.vega_lite_chart(generate_sales_data(), {
-        'mark': {'type': 'bar', 'tooltip': True, 'fill': 'rgb(173, 250, 29)', 'cornerRadiusEnd': 4 },
-        'encoding': {
-            'x': {'field': 'Month', 'type': 'ordinal'},
-            'y': {'field': 'Sales', 'type': 'quantitative', 'axis': {'grid': False}},
-        },
-    }, use_container_width=True)
-
-# Sample data
-data = [
-    {"invoice": "INV001", "paymentStatus": "Paid", "totalAmount": 500, "paymentMethod": "Credit Card"},
-    {"invoice": "INV002", "paymentStatus": "Unpaid", "totalAmount": 200, "paymentMethod": "Cash"},
-    {"invoice": "INV003", "paymentStatus": "Paid", "totalAmount": 150, "paymentMethod": "Debit Card"},
-    {"invoice": "INV004", "paymentStatus": "Unpaid", "totalAmount": 350, "paymentMethod": "Credit Card"},
-    {"invoice": "INV005", "paymentStatus": "Paid", "totalAmount": 400, "paymentMethod": "PayPal"},
-    # Add more records as needed
-]
-
-# Creating a DataFrame
-invoice_df = pd.DataFrame(data)
-
-with card_container(key="table1"):
-    ui.table(data=invoice_df, maxHeight=300)
-
-
-ui_result = ui.button("Button", key="btn")
-st.write("UI Button Clicked:", ui_result)
-
 
 ##
 import pandas as pd
@@ -81,10 +36,18 @@ file_path = 'comite-etl-all.csv'
 # Leer el archivo CSV y convertirlo en un DataFrame
 df = pd.read_csv(file_path)
 
-# Mostrar las primeras filas del DataFrame en Streamlit
-st.title('Mostrar DataFrame en Streamlit')
-st.dataframe(df.head())
+# Eliminar las filas con valores nulos
+df = df.dropna()
 
+# Mostrar las primeras filas del DataFrame en Streamlit
+#st.title('Mostrar DataFrame')
+#st.dataframe(df)
+
+
+
+ui.table(data=df.head(), maxHeight=300)
+
+st.write(ui.table)
 
 ######
 # Contar los valores únicos en la columna 'Proyecto/tesis/Resumen'
@@ -109,7 +72,12 @@ resumen_counts.columns = ['Proyecto/tesis/Resumen', 'Cantidad']
 
 # Mostrar el conteo de valores para verificar
 st.write("Conteo de valores en 'Proyecto/tesis/Resumen':")
-st.write(resumen_counts)
+#st.write(resumen_counts)
+
+ui.table(data=resumen_counts, maxHeight=300)
+
+st.write(ui.table)
+
 
 ###########
 # Definir los datos
@@ -276,3 +244,93 @@ with ui.card(key="image"):
         ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
 # Mostrar el contenido de las pestañas
 st.write(ui.tabs)
+
+
+import streamlit as st
+import pandas as pd
+import numpy as np
+
+# Crear el DataFrame de la tabla proporcionada
+data = {
+    "ID": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    "Tema": [
+        "Curso de Vida Salud materno infantil", "Enfermedades Transmisibles", "Enfermedades Transmisibles",
+        "Enfermedades Transmisibles", "Enfermedades Transmisibles", "Enfermedades Transmisibles",
+        "Organización del Sistema Sanitario", "Curso de Vida Salud materno infantil",
+        "Organización del Sistema Sanitario", "Organización del Sistema Sanitario",
+        "ECNT Salud mental", "Enfermedades Transmisibles", "ECNT Salud mental"
+    ],
+    "Subtema": [
+        "Análisis del seguimiento de los casos de infecciones, desnutrición, y adicciones de las gestantes",
+        "Evaluación de resultados de implementación de líneas de prevención y tratamiento de las enfermedades infecciosas más prevalentes (dengue, chikunguña, chagas)",
+        "Enfermedades Transmisibles que se cronifican (Tuberculosis, Chagas, VIH)",
+        "Prevención y control, alcances en el agua, animales y seres humanos.",
+        "Análisis del diagnóstico y seguimiento de los casos de Sífilis y VIH",
+        "Implementación y pilotaje de posibles innovaciones en la prevención y seguimiento de casos de patologías transmitidas por vectores, nuevas tecnologías; resistencias",
+        "Evaluación de las gestiones hospitalarias y de centros de salud, así como de ciertos servicios de particular interés como guardias hospitalarias, y aquellos que presenten indicadores críticos o de excelencia.",
+        "Análisis de las principales causas según criterio de reducibilidad",
+        "CAPACITACIÓN para la GESTIÓN PÚBLICA Y SANITARIA: Necesidades a cubrir",
+        "Relación entre la gestión, la calidad de atención y los indicadores de servicio",
+        "Análisis del CONSUMO PROBLEMÁTICO DE SUSTANCIAS Y ADICCIONES (adolescentes y jóvenes, adultos)",
+        "Casos de Sífilis congénita y expuestos perinatales VIH",
+        "Análisis del seguimiento de los casos de infecciones, desnutrición, y adicciones de las gestantes; relación con las estadísticas perinatales y de mortalidad materna"
+    ],
+}
+
+df = pd.DataFrame(data)
+
+# Función para calcular la similitud del coseno
+def cosine_similarity(vec1, vec2):
+    dot_product = np.dot(vec1, vec2)
+    norm_vec1 = np.linalg.norm(vec1)
+    norm_vec2 = np.linalg.norm(vec2)
+    return dot_product / (norm_vec1 * norm_vec2)
+
+# Función para convertir el texto en vectores utilizando la frecuencia de palabras
+def text_to_vector(text, vocab):
+    vector = np.zeros(len(vocab))
+    for word in text.split():
+        if word in vocab:
+            vector[vocab[word]] += 1
+    return vector
+
+# Función para encontrar la categoría más similar
+def find_most_similar_category(input_text, df):
+    documents = df["Subtema"].tolist()
+    documents.append(input_text)
+    
+    # Crear vocabulario
+    vocab = {}
+    for doc in documents:
+        for word in doc.split():
+            if word not in vocab:
+                vocab[word] = len(vocab)
+    
+    input_vector = text_to_vector(input_text, vocab)
+    max_similarity = -1
+    most_similar_index = -1
+    
+    for i, doc in enumerate(documents[:-1]):
+        doc_vector = text_to_vector(doc, vocab)
+        similarity = cosine_similarity(input_vector, doc_vector)
+        if similarity > max_similarity:
+            max_similarity = similarity
+            most_similar_index = i
+    
+    return df.iloc[most_similar_index]["Tema"]
+
+# Interfaz de usuario de Streamlit
+st.title("Asignación de Categoría Basada en Resumen")
+
+input_text = st.text_area("Ingrese el resumen del trabajo:")
+
+if st.button("Asignar Categoría"):
+    if input_text:
+        categoria = find_most_similar_category(input_text, df)
+        st.write(f"La categoría asignada es: **{categoria}**")
+    else:
+        st.write("Por favor, ingrese un resumen.")
+
+# Mostrar la tabla de referencia
+st.write("Tabla de Referencia:")
+st.dataframe(df)
