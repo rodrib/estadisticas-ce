@@ -265,5 +265,14 @@ with ui.card(key="image"):
     elif value == '2020':
         st.image("nube2020.png",caption="PyGWalker", use_column_width=True )
         ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
+    elif value == '2021':
+        st.image("nube2021.png",caption="PyGWalker", use_column_width=True )
+        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
+    elif value == '2022':
+        st.image("nube2022.png",caption="PyGWalker", use_column_width=True )
+        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
+    elif value == '2023':
+        st.image("nube2023.png",caption="PyGWalker", use_column_width=True )
+        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
 # Mostrar el contenido de las pestañas
 st.write(ui.tabs)
