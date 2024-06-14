@@ -45,9 +45,51 @@ df = df.dropna()
 
 
 
-ui.table(data=df.head(), maxHeight=300)
+# ui.table(data=df.head(3), maxHeight=300)
 
+# st.write(ui.table)
+
+
+# # Crear un selector de año
+# ano_seleccionado = st.selectbox("Seleccione el año", options=df['Año'].unique())
+
+# # Filtrar el DataFrame según el año seleccionado
+# df_filtrado = df[df['Año'] == ano_seleccionado]
+
+# # Mostrar el DataFrame filtrado en la interfaz de usuario
+# st.subheader(f"Datos para el año {ano_seleccionado}")
+# ui.table(data=df_filtrado, maxHeight=300)
+
+# # Renderizar la tabla
+# st.write(ui.table)
+################
+
+#Con opciones
+
+# Crear un selector de año
+ano_seleccionado = st.selectbox("Seleccione el año", options=df['Año'].unique())
+
+# Filtrar el DataFrame según el año seleccionado
+df_filtrado = df[df['Año'] == ano_seleccionado]
+
+# Mostrar el DataFrame filtrado en la interfaz de usuario
+st.subheader(f"Datos para el año {ano_seleccionado}")
+
+# Opción para mostrar todos los valores
+mostrar_todos = st.checkbox("Mostrar todos los valores")
+
+# Mostrar los primeros 5 valores o todos según la selección del usuario
+if mostrar_todos:
+    ui.table(data=df_filtrado, maxHeight=300)
+else:
+    ui.table(data=df_filtrado.head(), maxHeight=300)
+
+# Renderizar la tabla
 st.write(ui.table)
+
+
+
+
 
 ######
 # Contar los valores únicos en la columna 'Proyecto/tesis/Resumen'
