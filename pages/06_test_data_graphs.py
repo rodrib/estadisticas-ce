@@ -11,6 +11,22 @@ def crossfilter():
         penguins,
         x = "bill_length_mm",
         y = "bill_depth_mm",
-
-
+        color = "species",
+        height=350,
     )
+
+
+    selected_points = st.plotly_chart(
+        scatter_chart,
+        key="penguins",
+        on_select="rerun",
+    )
+
+    st.dataframe(
+        penguins.iloc[
+            selected_points["selection"]["point_indices"]],
+            height=350,
+    )
+
+
+crossfilter()
